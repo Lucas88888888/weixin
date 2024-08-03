@@ -1,6 +1,8 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+//注册全局变量
+window.ipcRenderer = ipcRenderer
 // Custom APIs for renderer
 const api = {}
 
