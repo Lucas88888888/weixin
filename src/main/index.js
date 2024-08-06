@@ -73,6 +73,7 @@ function createWindow() {
     //设置最小窗口大小
     mainWindow.setMinimumSize(800, 600)
 
+    //todo 管理后台的窗口操作
     if (config.admin) {
     }
   })
