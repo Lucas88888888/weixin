@@ -9,6 +9,7 @@ import '@/assets/icon/iconfont.css'
 import '@/assets/base.scss'
 
 import Layout from '@/components/Layout.vue'
+import WinOp from '@/components/WinOp.vue'
 
 import router from '@/router'
 import Utils from '@/utils/Utils.js'
@@ -22,6 +23,7 @@ app.use(ElementPlus)
 app.use(router)
 app.use(Pinia.createPinia())
 
+app.component('WinOp', WinOp)
 app.component('Layout', Layout)
 
 app.config.globalProperties.Utils = Utils
