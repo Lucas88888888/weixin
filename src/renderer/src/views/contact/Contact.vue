@@ -31,6 +31,9 @@
     </template>
     <template #right-content>
       <div class="title-panel drag">{{ rightTitle }}</div>
+      <router-view v-slot="{ Component }">
+        <component :is="Component" ref="componentRef"></component>
+      </router-view>
     </template>
   </Layout>
 </template>
@@ -99,6 +102,16 @@ const partList = ref([
 ])
 
 const rightTitle = ref()
+
+const partJump = (data) => {
+  if (data.showTitle) {
+    rightTitle.value = data.name
+  } else {
+    rightTitle.value = null
+  }
+  //todo 处理联系人好友申请 数量已读
+  router.push(data.path)
+}
 </script>
 
 <style lang="scss" scoped>
