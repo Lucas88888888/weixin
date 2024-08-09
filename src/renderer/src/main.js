@@ -13,6 +13,8 @@ import WinOp from '@/components/WinOp.vue'
 import ContentPanel from '@/components/ContentPanel.vue'
 import ShowLocalImage from '@/components/ShowLocalImage.vue'
 import UserBaseInfo from '@/components/UserBaseInfo.vue'
+import Dialog from '@/components/Dialog.vue'
+import Avatar from '@/components/Avatar.vue'
 
 import router from '@/router'
 import Utils from '@/utils/Utils.js'
@@ -31,6 +33,8 @@ app.component('Layout', Layout)
 app.component('ContentPanel', ContentPanel)
 app.component('ShowLocalImage', ShowLocalImage)
 app.component('UserBaseInfo', UserBaseInfo)
+app.component('Dialog', Dialog)
+app.component('Avatar', Avatar)
 
 app.config.globalProperties.Utils = Utils
 app.config.globalProperties.Verify = Verify

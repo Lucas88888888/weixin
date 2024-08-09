@@ -39,9 +39,11 @@
     </div>
     <div class="no-data" v-if="!searchResult">没有搜索到任何结果</div>
   </ContentPanel>
+  <SearchAdd ref="searchAddRef" @reload="resetForm"></SearchAdd>
 </template>
 
 <script setup>
+import SearchAdd from './SearchAdd.vue'
 import { ref, reactive, getCurrentInstance, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance()
@@ -77,6 +79,16 @@ const search = async () => {
     return
   }
   searchResult.value = result.data
+}
+
+const searchAddRef = ref()
+const applyContact = () => {
+  searchAddRef.value.show(searchResult.value)
+}
+
+const resetForm = () => {
+  searchResult.value = {}
+  contactId.value = undefined
 }
 </script>
 

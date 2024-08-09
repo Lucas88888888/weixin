@@ -21,7 +21,18 @@
               <div :class="['iconfont', sub.icon]" :style="{ background: sub.iconBgColor }"></div>
               <div class="text">{{ sub.name }}</div>
             </div>
-            <template v-for="contact in item.contactData"></template>
+            <template v-for="contact in item.contactData">
+              <div
+                :class="[
+                  'part-item',
+                  contact[item.contactId] == route.query.contactId ? 'active' : ''
+                ]"
+                @click="contactDetail(contact, item)"
+              >
+                <Avatar :userId="contact[item.contactId]" :width="35"></Avatar>
+                <div class="text">{{ contact[item.contactName] }}</div>
+              </div>
+            </template>
             <template v-if="item.contactData && item.contactData.length == 0">
               <div class="no-data">{{ item.emptyMsg }}</div>
             </template>
@@ -39,11 +50,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from 'vue'
+import { ref, reactive, getCurrentInstance, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
+
+import { useContactStateStore } from '@/stores/ContactStateStore'
+const contactStateStore = useContactStateStore()
+
+const searchKey = ref()
+const search = () => {}
 
 const partList = ref([
   {
@@ -112,6 +129,43 @@ const partJump = (data) => {
   //todo 处理联系人好友申请 数量已读
   router.push(data.path)
 }
+
+const loadContact = async (contactType) => {
+  let result = await proxy.Request({
+    url: proxy.Api.loadContact,
+    params: {
+      contactType
+    }
+  })
+  if (!result) {
+    return
+  }
+
+  if (contactType === 'GROUP') {
+    partList.value[2].contactData = result.data
+  } else if (contactType === 'USER') {
+    partList.value[3].contactData = result.data
+  }
+}
+
+loadContact('USER')
+loadContact('GROUP')
+
+watch(
+  () => contactStateStore.contactReload,
+  (newVal, oldVal) => {
+    if (!newVal) {
+      return
+    }
+    switch (newVal) {
+      case 'USER':
+      case 'GROUP':
+        loadContact(newVal)
+        break
+    }
+  },
+  { immediate: true, deep: true }
+)
 </script>
 
 <style lang="scss" scoped>
