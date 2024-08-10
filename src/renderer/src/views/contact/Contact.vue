@@ -151,6 +151,32 @@ const loadContact = async (contactType) => {
 loadContact('USER')
 loadContact('GROUP')
 
+const loadMyGroup = async () => {
+  let result = await proxy.Request({
+    url: proxy.Api.loadMyGroup,
+    showLoading: false
+  })
+  if (!result) {
+    return
+  }
+  partList.value[1].contactData = result.data
+}
+loadMyGroup()
+
+const contactDetail = (contact, part) => {
+  if (part.showTitle) {
+    rightTitle.value = contact[part.contactName]
+  } else {
+    rightTitle.value = null
+  }
+  router.push({
+    path: part.contactPath,
+    query: {
+      contactId: contact[part.contactId]
+    }
+  })
+}
+
 watch(
   () => contactStateStore.contactReload,
   (newVal, oldVal) => {
@@ -158,9 +184,17 @@ watch(
       return
     }
     switch (newVal) {
+      case 'MY':
+        loadMyGroup()
+        break
       case 'USER':
       case 'GROUP':
         loadContact(newVal)
+        break
+      case 'REMOVE_USER':
+        loadContact('USER')
+        router.push('/contact/blank')
+        rightTitle.value = null
         break
     }
   },
