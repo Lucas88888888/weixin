@@ -1,6 +1,6 @@
 <template>
   <div class="top drag"></div>
-  <fiv class="iconfont icon-chat"></fiv>
+  <div class="iconfont icon-chat"></div>
 </template>
 
 <script setup></script>

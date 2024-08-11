@@ -76,7 +76,7 @@ const partList = ref([
         name: '新的朋友',
         icon: 'icon-plane',
         iconBgColor: '#08bf61',
-        path: '/contact/contactNotice',
+        path: '/contact/contactApply',
         showTitle: true,
         countKey: 'contactApplyCount'
       }
@@ -159,7 +159,8 @@ const loadMyGroup = async () => {
   if (!result) {
     return
   }
-  partList.value[1].contactData = result.data
+  partList.value[1].contactData = result.data.filter((group) => group.status == 1)
+  // partList.value[1].contactData = result.data
 }
 loadMyGroup()
 
@@ -190,6 +191,16 @@ watch(
       case 'USER':
       case 'GROUP':
         loadContact(newVal)
+        break
+      case 'DISSOLUTION_GROUP':
+        loadMyGroup()
+        router.push('/contact/blank')
+        rightTitle.value = null
+        break
+      case 'LEAVE_GROUP':
+        loadContact('GROUP')
+        router.push('/contact/blank')
+        rightTitle.value = null
         break
       case 'REMOVE_USER':
         loadContact('USER')
