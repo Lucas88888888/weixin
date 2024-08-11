@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from 'vue'
+import { ref, reactive, getCurrentInstance, computed } from 'vue'
 const { proxy } = getCurrentInstance()
 
 const props = defineProps({
@@ -47,6 +47,11 @@ const props = defineProps({
   }
 })
 
+const preview = computed(() => {
+  return props.modelValue instanceof File
+})
+
+//todo 文件上传
 const uploadImage = async (file) => {
   file = file.file
 }

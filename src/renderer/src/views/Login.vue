@@ -100,11 +100,12 @@
 
 <script setup>
 import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
-import { useUserInfoStore } from '@/stores/UserInfoStore'
 import md5 from 'js-md5'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+import { useUserInfoStore } from '@/stores/UserInfoStore'
 const userInfoStore = useUserInfoStore()
 const { proxy } = getCurrentInstance()
 
