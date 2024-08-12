@@ -2,7 +2,16 @@ import { app, shell, BrowserWindow, Menu, Tray } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { onLoginOrRegister, onLoginSuccess, winTitleOp } from './ipc'
+import {
+  onLoginOrRegister,
+  onLoginSuccess,
+  winTitleOp,
+  onGetLocalStore,
+  onSetLocalStore
+} from './ipc'
+
+import { createTable } from './db/ADB'
+
 const NODE_ENV = process.env.NODE_ENV
 
 const login_width = 300
@@ -104,50 +113,36 @@ function createWindow() {
   winTitleOp((e, { action, data }) => {
     const webContents = e.sender
     const win = BrowserWindow.fromWebContents(webContents)
-    // switch (action) {
-    //   case 'close':
-    //     if (data.closeType == 0) {
-    //       win.close()
-    //     } else {
-    //       win.setSkipTaskbar(true)
-    //       win.hide()
-    //     }
-    //     break
+    switch (action) {
+      case 'close':
+        if (data.closeType == 0) {
+          win.close()
+        } else {
+          win.setSkipTaskbar(true)
+          win.hide()
+        }
+        break
 
-    //   case 'minimize':
-    //     win.minimize()
-    //     break
+      case 'minimize':
+        win.minimize()
+        break
 
-    //   case 'maximize':
-    //     win.maximize()
-    //     break
+      case 'maximize':
+        win.maximize()
+        break
 
-    //   case 'unmaximize':
-    //     win.unmaximize()
-    //     break
+      case 'unmaximize':
+        win.unmaximize()
+        break
 
-    //   case 'top':
-    //     win.setAlwaysOnTop(data.top)
-    //     break
-    // }
-
-    if (action == 'close') {
-      if (data.closeType == 0) {
-        win.close()
-      } else {
-        win.setSkipTaskbar(true)
-        win.hide()
-      }
-    } else if (action == 'minimize') {
-      win.minimize()
-    } else if (action == 'maximize') {
-      win.maximize()
-    } else if (action == 'unmaximize') {
-      win.unmaximize()
-    } else if (action == 'top') {
-      win.setAlwaysOnTop(data.top)
+      case 'top':
+        win.setAlwaysOnTop(data.top)
+        break
     }
   })
+
+  onSetLocalStore()
+  onGetLocalStore()
 }
 
 // This method will be called when Electron has finished
