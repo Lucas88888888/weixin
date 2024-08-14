@@ -56,7 +56,6 @@ import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
 import ChatSession from './ChatSession.vue'
 import { ref, reactive, getCurrentInstance, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { session } from 'electron'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
@@ -137,6 +136,9 @@ const loadChatMessage = () => {
 const onReceiveMessage = () => {
   window.ipcRenderer.on('receiveMessage', (e, message) => {
     console.log('收到消息', message)
+    if (message.messageType == 0) {
+      loadChatSession()
+    }
   })
 }
 

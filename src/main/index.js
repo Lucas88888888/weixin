@@ -41,6 +41,11 @@ function createWindow() {
     }
   })
 
+  // 打开控制台
+  if (NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
     mainWindow.setTitle('LucasChat')
@@ -58,12 +63,6 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-
-  // 打开控制台
-  if (NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools()
-  }
-  // mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   //托盘
   const tray = new Tray(icon)

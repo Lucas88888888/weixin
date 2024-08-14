@@ -112,6 +112,10 @@ const hidePopover = () => {
   showEmojiPopover.value = false
 }
 
+const showEmojiPopoverHandler = () => {
+  showEmojiPopover.value = !showEmojiPopover.value
+}
+
 const sendMessage = (e) => {
   if (e.shiftKey && e.keyCode === 13) {
     return
