@@ -50,7 +50,9 @@ const createWs = () => {
           userId: store.getUserId(),
           noReadCount: message.extendData.applyCount
         })
-        //   sender.send('')
+        //发送消息
+        console.log('开始发送消息')
+        sender.send('receiveMessage', { messageType: message.messageType })
         break
     }
   }
