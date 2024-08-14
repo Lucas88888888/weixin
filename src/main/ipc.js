@@ -5,6 +5,14 @@ import icon from '../../resources/icon.png?asset'
 import store from './store'
 import { initWs } from './wsClient'
 import { addUserSetting } from './db/UserSettingModel'
+import {
+  selectUserSessionList,
+  delChatSession,
+  topChatSession,
+  updateSessionInfo4Message,
+  readAll
+} from './db/ChatSessionUserModel'
+import { selectMessageList, saveMessage } from './db/ChatMessageModel'
 
 const NODE_ENV = process.env.NODE_ENV
 
@@ -44,4 +52,66 @@ const onGetLocalStore = () => {
   })
 }
 
-export { onLoginOrRegister, onLoginSuccess, winTitleOp, onSetLocalStore, onGetLocalStore }
+//查询session
+const onLoadSessionData = () => {
+  ipcMain.on('loadSessionData', async (e) => {
+    const result = await selectUserSessionList()
+    e.sender.send('loadSessionDataCallback', result)
+  })
+}
+
+const onDelChatSession = () => {
+  ipcMain.on('delChatSession', (e, contactId) => {
+    delChatSession(contactId)
+  })
+}
+
+const onTopChatSession = () => {
+  ipcMain.on('topChatSession', (e, { contactId, topType }) => {
+    topChatSession(contactId, topType)
+  })
+}
+
+const onLoadChatMessage = () => {
+  ipcMain.on('loadChatMessage', async (e, data) => {
+    const result = await selectMessageList(data)
+    e.sender.send('loadChatMessageCallback', result)
+  })
+}
+
+const onSetSessionSelect = () => {
+  ipcMain.on('setSessionSelect', async (e, { contactId, sessionId }) => {
+    if (sessionId) {
+      store.setUserData('currentSessionId', sessionId)
+      readAll(contactId)
+    } else {
+      store.deleteUserData('currentSessionId')
+    }
+  })
+}
+
+const onAddLocalMessage = () => {
+  ipcMain.on('addLocalMessage', async (e, data) => {
+    await saveMessage(data)
+    //todo 保存文件
+    //更新session
+    data.lastReceiveTime = data.sendTime
+    //todo 更新会话
+    updateSessionInfo4Message(store.getUserData('currentSessionId'), data)
+    e.sender.send('addLocalCallback', { status: 1, messageId: data.messageId })
+  })
+}
+
+export {
+  onLoginOrRegister,
+  onLoginSuccess,
+  winTitleOp,
+  onSetLocalStore,
+  onGetLocalStore,
+  onLoadSessionData,
+  onDelChatSession,
+  onTopChatSession,
+  onLoadChatMessage,
+  onAddLocalMessage,
+  onSetSessionSelect
+}
